@@ -6,7 +6,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
+import ua.cn.stu.domain.Goods;
 import ua.cn.stu.domain.Product;
+import ua.cn.stu.domain.Supplier;
 
 import java.io.InputStream;
 import java.util.Properties;
@@ -48,7 +50,8 @@ public class HibernateDAOFactory {
                 configuration.setProperty("hibernate.show_sql", "true");
                 configuration.setProperty("hibernate.format_sql", "true");
 
-                configuration.addAnnotatedClass(Product.class);
+                configuration.addAnnotatedClass(Goods.class);
+                configuration.addAnnotatedClass(Supplier.class);
 
                 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties()).build();
@@ -73,6 +76,14 @@ public class HibernateDAOFactory {
 
     public ProductDAO getProductDAO() {
         return new ProductDAO(getCurrentSession());
+    }
+
+    public GoodsDAO getGoodsDAO() {
+        return new GoodsDAO(getCurrentSession());
+    }
+
+    public SupplierDAO getSupplierDAO() {
+        return new SupplierDAO(getCurrentSession());
     }
 
     public void closeCurrentSession() {
