@@ -2,6 +2,7 @@ package ua.cn.stu.service;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import org.hibernate.Hibernate;
 import ua.cn.stu.dao.HibernateDAOFactory;
 import ua.cn.stu.domain.Goods;
 import ua.cn.stu.domain.Supplier;
@@ -55,6 +56,21 @@ public class GoodsService {
         goods.setQuantity(quantity);
         goods.setSupplier(supplier);
         HibernateDAOFactory.getInstance().getGoodsDAO().updateGoods(goods);
+    }
+
+    @GET
+    @Path("getTop10")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Goods> getTop10Goods() {
+        List<Goods> topGoods = HibernateDAOFactory.getInstance().getGoodsDAO().getTop10GoodsByQuantityNative();
+
+        for (Goods good : topGoods) {
+            if (good.getSupplier() != null) {
+                Hibernate.initialize(good.getSupplier());
+            }
+        }
+
+        return topGoods;
     }
 
 }

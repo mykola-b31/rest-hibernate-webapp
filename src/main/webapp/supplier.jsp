@@ -63,6 +63,17 @@
     </tr>
 </table>
 
+<h2>Top 10 Most Stocked Goods</h2>
+<table style="width: 100%" border="1" id="topGoodsTable">
+    <tr id="topGoodsHeaderRow">
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Supplier</th>
+    </tr>
+</table>
+
 <script
         src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
@@ -77,7 +88,7 @@
             dataType: 'json',
             type: 'GET',
             success: function (data){
-                jQuery('.datarow').remove();
+                jQuery('#supplierTable .datarow').remove();
                 jQuery('#headerrow').after(createDataRowsFromJson(data));
             }
         });
@@ -173,8 +184,39 @@
         loadSuppliers();
     }
 
+    function loadTop10Goods() {
+        jQuery.ajax({
+            url: 'rest/goods/getTop10',
+            dataType: 'json',
+            type: 'GET',
+            success: function (data){
+                jQuery('#topGoodsTable .rows').remove();
+                jQuery('#topGoodsHeaderRow').after(createTopGoodsRowsFromJson(data));
+            }
+        });
+    }
+
+    function createTopGoodsRowsFromJson(data) {
+        var tableContent = "";
+        for (var key in data) {
+            if(data.hasOwnProperty(key)) {
+                var supplierName = data[key].supplier ? data[key].supplier.name : "N/A";
+
+                tableContent += "<tr class='rows'>";
+                tableContent += "<td>" + data[key].id + "</td>";
+                tableContent += "<td>" + data[key].name + "</td>";
+                tableContent += "<td>" + data[key].price + "</td>";
+                tableContent += "<td>" + data[key].quantity + "</td>";
+                tableContent += "<td>" + supplierName + "</td>";
+                tableContent += "</tr>";
+            }
+        }
+        return tableContent;
+    }
+
     jQuery(document).ready(function (){
         loadSuppliers();
+        loadTop10Goods();
         jQuery('#addSupplier').click(function(){
             var name = jQuery('#supplierName').val();
             var contact = jQuery('#supplierContact').val();

@@ -113,4 +113,11 @@ public class GoodsDAO {
         return query.list();
     }
 
+    public List<Goods> getTop10GoodsByQuantityNative() {
+        String sql = "SELECT * FROM goods ORDER BY goods_quantity DESC LIMIT 10";
+
+        Query<Goods> query = session.createNativeQuery(sql, Goods.class);
+        return query.list();
+    }
+
 }
